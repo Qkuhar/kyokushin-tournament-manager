@@ -1,0 +1,86 @@
+/* main.css */
+
+@import url("layout.css");
+@import url("participants.css");
+@import url("groups.css");
+@import url("fights.css");
+@import url("schedule.css");
+
+html,
+body{
+
+    margin:0;
+
+    height:100%;
+
+    font-family:Segoe UI, sans-serif;
+
+}
+
+#app{
+
+    display:flex;
+
+    height:100vh;
+
+}
+
+#sidebar{
+
+    width:220px;
+
+    background:#2f3542;
+
+    color:white;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+#sidebar h2{
+
+    margin:20px;
+
+}
+
+.menu-item{
+
+    border:none;
+
+    background:none;
+
+    color:white;
+
+    padding:15px 20px;
+
+    text-align:left;
+
+    cursor:pointer;
+
+    font-size:16px;
+
+}
+
+.menu-item:hover{
+
+    background:#57606f;
+
+}
+
+.menu-item.active{
+
+    background:#3742fa;
+
+}
+
+#content{
+
+    flex:1;
+
+    padding:20px;
+
+    overflow:auto;
+
+}
