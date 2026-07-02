@@ -1,55 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
-
     <meta charset="UTF-8">
-
-    <title>Tournament Manager</title>
-
-    <link rel="stylesheet" href="css/main.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Турнирный Менеджер</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
-
 <body>
 
-<div id="app">
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="logo">
+                    <span class="logo-icon">🏆</span>
+                    <h2>Турнир Менеджер</h2>
+                </div>
+                <nav class="menu-nav">
+                    <button id="btn-create-group" class="btn btn-secondary">➕ Создать группу</button>
+                    <button id="btn-strict-split" class="btn btn-secondary">⚡ Разбить на группы строго</button>
+                    <button id="btn-smart-fill" class="btn btn-secondary">🧠 Определить неопределенных</button>
+                    <button id="btn-show-brackets" class="btn btn-primary">📊 Показать все сетки</button>
+                </nav>
+            </div>
+            <button id="btn-export" class="btn btn-success">💾 Экспортировать данные</button>
+        </aside>
 
-    <aside id="sidebar">
+        <main class="main-content">
+            <header class="main-header">
+                <div class="tabs-container">
+                    <button class="tab-btn active" data-gender="1">Мальчики</button>
+                    <button class="tab-btn" data-gender="2">Девочки</button>
+                </div>
+                
+                <div id="drop-zone" class="excel-drop-zone">
+                    <span class="drop-icon">📁</span>
+                    <span class="drop-text">Перетащите сюда Excel-файл или нажмите для загрузки</span>
+                    <input type="file" id="file-input" accept=".xlsx, .xls" hidden />
+                </div>
+            </header>
 
-        <h2>Tournament</h2>
+            <div class="workspace-layout">
+                <div id="unassigned-column" class="column-unassigned">
+                    </div>
+                
+                <div id="defined-groups-grid" class="groups-grid">
+                    </div>
+            </div>
+        </main>
+    </div>
 
-        <button class="menu-item active">
-            Participants
-        </button>
+    <div id="edit-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Редактирование участника</h3>
+                <button id="close-edit-modal" class="close-btn">&times;</button>
+            </div>
+            <form id="edit-form" class="modal-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label>ФИО</label>
+                    <input type="text" id="edit-name" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Возраст</label>
+                        <input type="number" id="edit-age" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Вес (кг)</label>
+                        <input type="number" step="0.1" id="edit-weight" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Город</label>
+                        <input type="text" id="edit-city" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Клуб</label>
+                        <input type="text" id="edit-club" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Кю (Пояс)</label>
+                    <input type="number" id="edit-kyu" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-full" style="text-align: center;">Сохранить</button>
+            </form>
+        </div>
+    </div>
+    <div id="group-modal" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 900px; width: 90vw;">
+            <div class="modal-header">
+                <h3 id="group-modal-title">Параметры группы</h3>
+                <button id="close-group-modal" class="close-btn">&times;</button>
+            </div>
+            
+            <div class="group-modal-layout" style="display: flex; gap: 24px;">
+                <form id="group-form" class="modal-form" style="flex: 1; min-width: 300px;">
+                    <input type="hidden" id="group-edit-id">
+                    
+                    <div class="form-group">
+                        <label>Название группы</label>
+                        <input type="text" id="group-name" placeholder="Оставьте пустым для авто-именования">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Мин. Возраст</label>
+                            <input type="number" id="group-min-age" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Макс. Возраст</label>
+                            <input type="number" id="group-max-age" value="100" required>
+                        </div>
+                    </div>
 
-        <button class="menu-item">
-            Groups
-        </button>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Мин. Вес (кг)</label>
+                            <input type="number" step="0.1" id="group-min-weight" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Макс. Вес (кг)</label>
+                            <input type="number" step="0.1" id="group-max-weight" value="500" required>
+                        </div>
+                    </div>
 
-        <button class="menu-item">
-            Fights
-        </button>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Мин. Кю (Пояс)</label>
+                            <input type="number" id="group-min-kyu" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Макс. Кю (Пояс)</label>
+                            <input type="number" id="group-max-kyu" value="10" required>
+                        </div>
+                    </div>
 
-        <button class="menu-item">
-            Schedule
-        </button>
+                    <button type="submit" class="btn btn-primary w-full" style="text-align: center; margin-top: 12px;">Сохранить параметры</button>
+                </form>
 
-        <button class="menu-item">
-            Export
-        </button>
+                <div id="group-bracket-management" class="hidden" style="flex: 2; border-left: 1px solid var(--slate-200); padding-left: 24px; display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h4>Турнирная сетка группы</h4>
+                        <button id="btn-generate-tree" class="btn btn-success" style="width: auto; padding: 6px 12px; font-size: 0.8rem;">⚡ Сгенерировать / Сбросить сетку</button>
+                    </div>
+                    <p style="font-size: 0.75rem; color: #64748b;">* Кликните на одного участника, затем на другого внутри сетки, чтобы поменять их местами.</p>
+                    
+                    <div id="group-bracket-preview" style="flex: 1; background: #0f172a; border-radius: 12px; min-height: 250px; max-height: 400px; overflow: auto; padding: 16px; color: white;">
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </aside>
+    <div id="brackets-modal" class="modal-overlay hidden bg-dark">
+        <div class="brackets-container">
+            <header class="brackets-header">
+                <div>
+                    <span class="badge">Режим просмотра таблиц</span>
+                    <h2 id="bracket-group-title">Название группы</h2>
+                </div>
+                <button id="close-brackets-modal" class="close-btn text-white">&times;</button>
+            </header>
 
-    <main id="content">
+            <div class="brackets-nav">
+                <button id="prev-bracket-group" class="nav-arrow">&larr;</button>
+                <span id="bracket-group-counter">Группа 1 из 1</span>
+                <button id="next-bracket-group" class="nav-arrow">&rarr;</button>
+            </div>
 
-    </main>
+            <div class="brackets-viewport">
+                <div id="bracket-tree" class="bracket-tree">
+                    </div>
+            </div>
+        </div>
+    </div>
+    <div id="collision-modal" class="modal-overlay hidden">
+        <div class="modal-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 style="color: #b91c1c;">⚠️ Обнаружены дубликаты участников!</h3>
+            </div>
+            <div class="modal-form">
+                <p style="font-size: 0.9rem; color: #475569;">
+                    В загружаемом файле найдены спортсмены, ФИО которых уже есть в системе. Пожалуйста, выберите действие для этих участников:
+                </p>
+                
+                <div id="collision-list" style="max-height: 200px; overflow-y: auto; background: #fdf2f2; border: 1px solid #fca5a5; padding: 12px; border-radius: 8px; display: flex; flex-direction: column; gap: 8px;"></div>
+                
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                    <button id="btn-collision-rename" class="btn btn-secondary" style="text-align: center;">
+                        📝 Добавить как новых (Переименовать в ФИО (2), ФИО (3)...)
+                    </button>
+                    <button id="btn-collision-merge" class="btn btn-primary" style="text-align: center; background: #10b981;">
+                        🤝 Это одни и те же люди (Пропустить импорт дубликатов)
+                    </button>
+                    <button id="btn-collision-cancel" class="btn btn-secondary" style="text-align: center; background: #ef4444; color: white;">
+                        ❌ Отменить импорт всего файла
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-</div>
-
-<script src="js/vendor/xlsx.full.min.js"></script>
-<script type="module" src="js/app.js"></script>
-
+    <script type="module" src="js/app.js"></script>
 </body>
-
 </html>

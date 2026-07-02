@@ -1,0 +1,403 @@
+/* ==========================================================================
+   1. ОБЩИЕ СБРОСЫ И ПЕРЕМЕННЫЕ
+   ========================================================================== */
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Segoe UI', system-ui, sans-serif; 
+}
+
+:root {
+    --bg-main: #f8fafc;
+    --bg-sidebar: #0f172a;
+    --text-light: #f1f5f9;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --success: #10b981;
+    --slate-200: #e2e8f0;
+    --slate-700: #334155;
+    --unassigned-bg: #f1f5f9;
+}
+
+body { 
+    background-color: var(--bg-main); 
+    color: #1e293b; 
+    height: 100vh; 
+    overflow: hidden; 
+}
+
+/* ==========================================================================
+   2. СЕТКА ИНТЕРФЕЙСА И САЙДБАР
+   ========================================================================== */
+.app-container { 
+    display: flex; 
+    height: 100vh; 
+    width: 100vw;
+}
+
+.sidebar { 
+    width: 300px; 
+    min-width: 300px;
+    background-color: var(--bg-sidebar); 
+    color: var(--text-light); 
+    padding: 24px; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1); 
+}
+
+.sidebar-top {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    margin-bottom: 32px; 
+}
+
+.logo h2 { 
+    font-size: 1.1rem; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    color: #fff; 
+}
+
+.menu-nav { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 12px; 
+}
+
+/* ==========================================================================
+   3. КНОПКИ И ХЕДЕР
+   ========================================================================== */
+.btn { 
+    width: 100%; 
+    border: none; 
+    padding: 12px 16px; 
+    border-radius: 10px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    text-align: left; 
+    font-size: 0.9rem; 
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary { background: #1e293b; color: #cbd5e1; }
+.btn-secondary:hover { background: #334155; color: #fff; }
+.btn-success { background: var(--success); color: white; text-align: center; }
+.w-full { width: 100%; }
+
+.btn-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+.btn-icon:hover {
+    background: #f1f5f9;
+}
+
+.main-content { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden; 
+}
+
+.main-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 16px 32px; 
+    background: white; 
+    border-bottom: 1px solid var(--slate-200); 
+}
+
+.tabs-container { display: flex; background: #f1f5f9; padding: 4px; border-radius: 8px; }
+.tab-btn { border: none; padding: 8px 24px; border-radius: 6px; font-weight: 500; cursor: pointer; background: transparent; color: #64748b; transition: all 0.2s; }
+.tab-btn.active { background: white; color: #0f172a; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+.excel-drop-zone { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 8px 20px; font-size: 0.85rem; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: border 0.2s; }
+.excel-drop-zone:hover { border-color: var(--primary); }
+
+/* ==========================================================================
+   4. РАБОЧАЯ ОБЛАСТЬ (ГРУППЫ И КАРТОЧКИ УЧАСТНИКОВ)
+   ========================================================================== */
+.workspace-layout {
+    flex: 1;
+    display: flex;
+    padding: 24px;
+    gap: 24px;
+    overflow: hidden; 
+}
+
+.column-unassigned {
+    width: 340px;
+    min-width: 340px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.groups-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 20px;
+    align-content: start;
+    align-items: start; 
+    overflow-y: auto; 
+    padding-right: 8px;
+    height: 100%;
+}
+
+.group-card { 
+    background: white; 
+    border: 1px solid var(--slate-200); 
+    border-radius: 16px; 
+    padding: 18px; 
+    display: flex; 
+    flex-direction: column; 
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    height: max-content; 
+    flex-shrink: 0;
+    transition: box-shadow 0.2s;
+}
+
+.group-card.unassigned { 
+    background: var(--unassigned-bg); 
+    border: 2px dashed #cbd5e1; 
+    height: 100%; 
+}
+.group-card.unassigned .cards-container {
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.group-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 10px; 
+    flex-shrink: 0;
+}
+.group-title { 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    font-size: 0.85rem; 
+    color: var(--primary); 
+}
+.group-card.unassigned .group-title { color: #475569; }
+
+.group-meta { 
+    font-size: 0.75rem; 
+    color: #64748b; 
+    background: #f8fafc; 
+    padding: 6px 10px; 
+    border-radius: 8px; 
+    margin-bottom: 12px; 
+    border: 1px solid #f1f5f9; 
+    flex-shrink: 0;
+}
+.group-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.cards-container { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    min-height: 60px;
+}
+
+/* КАРТОЧКА БОЙЦА */
+.player-card { 
+    background: white; 
+    border: 1px solid var(--slate-200); 
+    border-radius: 10px; 
+    padding: 12px; 
+    cursor: grab; 
+    position: relative; 
+    user-select: none; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02); 
+    flex-shrink: 0;
+}
+.player-card:active { cursor: grabbing; }
+.player-name { font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; color: #0f172a; }
+
+/* Подсветка для карточки-нарушителя параметров */
+.player-card.invalid-parameter {
+    background: #fff1f2 !important; 
+    border-color: #fda4af !important; 
+    box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.2);
+}
+.player-card.invalid-parameter .player-name {
+    color: #9f1239; 
+}
+
+/* ТЕГИ И БАДЖИ */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { font-size: 0.7rem; font-weight: 600; padding: 2px 8px; border-radius: 4px; border: 1px solid transparent; }
+
+.tag-club-0 { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
+.tag-club-1 { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
+.tag-club-2 { background: #f3e8ff; color: #7e22ce; border-color: #e9d5ff; }
+
+.tag-city-0 { background: #fef3c7; color: #b45309; border-color: #fde68a; }
+.tag-city-1 { background: #ffe4e6; color: #be123c; border-color: #fecdd3; }
+.tag-city-2 { background: #e0e7ff; color: #4338ca; border-color: #c7d2fe; }
+
+.tag-kyu { background: #334155; color: #fff; }
+.badge { background: #64748b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
+
+/* ==========================================================================
+   5. МОДАЛЬНЫЕ ОКНА И ОБЩАЯ НАВИГАЦИЯ СЕТОК
+   ========================================================================== */
+.modal-overlay { 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(15, 23, 42, 0.6); 
+    backdrop-filter: blur(4px); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 100; 
+}
+.modal-overlay.hidden { display: none; }
+
+/* ИСПРАВЛЕНО: Убрали жесткий max-width, теперь модалка слушается параметров из HTML */
+.modal-card { 
+    background: white; 
+    border-radius: 16px; 
+    width: auto; 
+    padding: 24px; 
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); 
+    color: #0f172a; 
+}
+
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8; }
+.close-btn:hover { color: #1e293b; }
+
+.modal-form { display: flex; flex-direction: column; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; color: #64748b; }
+.form-group input { padding: 8px 12px; border: 1px solid var(--slate-200); border-radius: 8px; font-size: 0.9rem; outline: none; width: 100%; }
+.form-group input:focus { border-color: var(--primary); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ГЛОБАЛЬНЫЙ ПРОСМОТР СЕТОК (ТЕМНЫЙ ФОН) */
+.modal-overlay.bg-dark { background: rgba(2, 6, 23, 0.95); }
+.brackets-container { width: 90vw; height: 90vh; display: flex; flex-direction: column; color: white; }
+.brackets-header { display: flex; justify-content: space-between; align-items: center; }
+.badge-bracket { background: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+.brackets-nav { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 20px 0; }
+.nav-arrow { background: #1e293b; border: none; color: white; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.nav-arrow:hover { background: var(--primary); }
+.brackets-viewport { flex: 1; display: flex; align-items: center; justify-content: center; background: #0f172a; border-radius: 20px; border: 1px solid #1e293b; overflow: auto; padding: 20px; }
+.text-white { color: white !important; }
+
+/* ==========================================================================
+   6. ИНТЕРАКТИВНОЕ УПРАВЛЕНИЕ СЕТКОЙ ВНУТРИ МОДАЛКИ ГРУППЫ
+   ========================================================================== */
+.group-modal-layout {
+    display: flex;
+    gap: 24px;
+    max-height: 80vh;
+    width: 100%;
+    align-items: stretch; /* Растягиваем элементы по высоте для ровной сетки */
+}
+
+/* Форма параметров группы теперь защищена от сдавливания */
+.group-modal-layout .modal-form {
+    flex: 0 0 340px; 
+    width: 340px;
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+#group-bracket-management {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden; 
+}
+
+#group-bracket-preview {
+    flex: 1;
+    background: #0f172a;
+    border-radius: 12px;
+    overflow: auto; 
+    padding: 24px;
+    color: white;
+}
+
+/* --- ТУРНИРНАЯ СЕТКА И ЛИНИИ СОЕДИНЕНИЯ --- */
+.bracket-tree { 
+    display: flex; 
+    align-items: center; 
+    gap: 40px; /* Удобный зазор между этапами */
+    position: relative;
+    padding: 20px 0;
+}
+
+.bracket-round { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-around; 
+    gap: 24px;
+    min-width: 250px;
+    position: relative;
+}
+
+.bracket-match { 
+    background: #1e293b; 
+    border: 1px solid #334155; 
+    border-radius: 8px; 
+    padding: 12px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Слоты участников */
+.match-slot { 
+    background: #0f172a; 
+    padding: 8px 12px; 
+    margin-top: 6px;
+    border-radius: 6px; 
+    font-size: 0.8rem; 
+    font-weight: 500; 
+    border: 1px solid #334155; 
+    color: #cbd5e1; 
+    text-align: left; 
+    cursor: pointer;
+    transition: all 0.2s; 
+}
+.match-slot:hover {
+    background: #1e293b;
+    border-color: var(--primary);
+    color: #fff;
+}
+
+/* Свап-активность */
+.match-slot.swap-active {
+    border-color: #f43f5e !important;
+    background: #4c0519 !important; 
+    color: #fecdd3 !important;
+}
