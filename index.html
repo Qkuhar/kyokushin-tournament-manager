@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Турнирный Менеджер</title>
+    <link rel="icon" href="favicon.ico" sizes="any">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
@@ -24,6 +25,12 @@
                 </nav>
             </div>
             <button id="btn-export" class="btn btn-success">💾 Экспортировать данные</button>
+            <button
+                id="btn-download-sample"
+                class="btn btn-success"
+                onclick="window.location.href='test.xlsx'">
+                💾 Скачать образец оформления участников турнира
+            </button>
         </aside>
 
         <main class="main-content">
