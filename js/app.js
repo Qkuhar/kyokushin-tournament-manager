@@ -2,11 +2,16 @@ import { state } from './state.js';
 import { render } from './render.js';
 import { initExcel, exportToExcel } from './excel.js';
 import { renderBrackets, drawBracketToContainer, generateBracketForGroup } from './brackets.js';
+import { exportBracketToPDF } from './exportBrackets.js';
 
 // НОВЫЕ ИМПОРТЫ ИЗ ПАПКИ ALGORITHMS
 import { runStrictSplit } from './algorithms/strictSplit.js';
 import { runSmartFill } from './algorithms/smartFill.js';
 // --- НАВЕШИВАНИЕ СОБЫТИЙ ИНТЕРФЕЙСА ---
+
+document.getElementById('btn-export-brackets')?.addEventListener('click', () => {
+    exportBracketToPDF();
+});
 
 // Вкладки Мальчики / Девочки
 document.querySelectorAll('.tab-btn').forEach(button => {
