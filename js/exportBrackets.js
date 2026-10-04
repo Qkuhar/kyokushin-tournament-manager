@@ -109,7 +109,7 @@ export async function exportBracketToPDF() {
         pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
     }
 
-    pdf.save(`Турнирные_Сетки_Кубок_Сильные_Духом.pdf`);
+    pdf.save(`Турнирные_Сетки_СММ_больших_и_маленьких_побед_2026.pdf`);
 }
 
 /**
@@ -134,7 +134,7 @@ function drawRoundRobinHeader(ctx, group, canvasWidth) {
     ctx.textAlign = 'center';
 
     ctx.font = 'bold 46px Arial';
-    ctx.fillText("учебные поединки СММ Кубок Сильные Духом 2026", canvasWidth / 2 - 50, 110);
+    ctx.fillText("СММ больших и маленьких побед 2026", canvasWidth / 2 - 50, 110);
 
     const genderText = group.gender === 'male' ? 'мальчики' : (group.gender === 'female' ? 'девочки' : 'участники');
     const ageText = group.ageCategory || group.age || group.ageName || '';
@@ -166,7 +166,7 @@ function drawHeader(ctx, group, canvasWidth) {
     ctx.textAlign = 'center';
 
     ctx.font = 'bold 50px Arial';
-    ctx.fillText("учебные поединки СММ Кубок Сильные Духом 2026", canvasWidth / 2 - 50, 110);
+    ctx.fillText("СММ больших и маленьких побед 2026", canvasWidth / 2 - 50, 110);
 
     const genderText = group.gender === 'male' ? 'мальчики' : (group.gender === 'female' ? 'девочки' : 'участники');
     const ageText = group.ageCategory || group.age || group.ageName || '';
