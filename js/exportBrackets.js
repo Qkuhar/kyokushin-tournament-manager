@@ -195,11 +195,14 @@ function drawHeader(ctx, group, canvasWidth) {
  */
 function getPlayerMetaText(p) {
     if (!p) return '';
-    const age = p.age ? `${p.age} лет` : '';
-    const rank = p.kyu || p.rank || p.dan ? `${p.kyu || p.rank} кю` : '';
-    const weight = p.weight ? `${p.weight} кг` : '';
+    // const age = p.age ? `${p.age} лет` : '';
+    // const rank = p.kyu || p.rank || p.dan ? `${p.kyu || p.rank} кю` : '';
+    // const weight = p.weight ? `${p.weight} кг` : '';
+    const city = p.city ? `${p.city}` : '';
+    const club = p.club ? `${p.club}` : '';
     
-    return [age, rank, weight].filter(Boolean).join(' ');
+    // return [age, rank, weight].filter(Boolean).join(' ');
+    return [city, club].filter(Boolean).join(' ');
 }
 
 /**
