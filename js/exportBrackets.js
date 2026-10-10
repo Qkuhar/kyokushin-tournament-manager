@@ -73,7 +73,7 @@ export async function exportBracketToPDF() {
             // === КРУГОВАЯ СИСТЕМА (Ровно 3 человека) ===
             drawRoundRobinHeader(ctx, group, canvasW);
 
-            const logoSize = canvasW / 4; // 620px
+            const logoSize = totalW / 4;
             const logoY = 210;
 
             if (logoImg) {
@@ -254,6 +254,19 @@ function drawRoundRobinTable(ctx, group, allParticipants, startX, startY, totalW
         }
     }
 
+    // Словарь распределения ролей по координатам ячеек (строка, столбец)
+    // Вы можете вручную поменять значение для любой пары, если потребуется
+    const roleDictionary = {
+        "1,0": "Широ",
+        "0,1": "Широ",
+        "0,2": "Широ",
+        
+        "2,0": "Ака",
+        "2,1": "Ака",
+        "1,2": "Ака"
+        // Добавьте ключи дальше, если участников больше 4 (например, "0,4", "4,0" и т.д.)
+    };
+
     players.forEach((p, idx) => {
         const y = startY + headerH + idx * rowH;
 
@@ -280,7 +293,42 @@ function drawRoundRobinTable(ctx, group, allParticipants, startX, startY, totalW
             if (idx === j) {
                 ctx.font = 'bold 54px Arial';
                 ctx.fillStyle = '#000000';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
                 ctx.fillText("X", cellX + colW / 2, y + rowH / 2);
+            } else {
+                ctx.save();
+
+                // Пропорции по ширине: 20% слева, 80% справа (оставляем пустой)
+                const w20 = colW * 0.2;
+                const dividerX = cellX + w20;
+
+                // Линия разделения внутри ячейки (вертикальная)
+                ctx.strokeStyle = '#cccccc';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(dividerX, y);
+                ctx.lineTo(dividerX, y + rowH);
+                ctx.stroke();
+
+                // Получаем значение из словаря по ключу "строка,столбец"
+                const cellKey = `${idx},${j}`;
+                const roleText = roleDictionary[cellKey] || "";
+
+                if (roleText) {
+                    ctx.font = '26px Arial';
+                    ctx.fillStyle = '#666666';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+
+                    ctx.save();
+                    ctx.translate(cellX + w20 / 2, y + rowH / 2);
+                    ctx.rotate(-Math.PI / 2);
+                    ctx.fillText(roleText, 0, 0);
+                    ctx.restore();
+                }
+
+                ctx.restore();
             }
         }
     });
@@ -388,7 +436,7 @@ function drawOlympicTreeFromMatches(ctx, group, players, startX, startY, totalW,
     // Эмблема в колонке "Победитель"
     const winnerColX = startX + roundsCount * colWidth + colWidth / 2;
     if (logoImg) {
-        const logoSize = colWidth * 0.90;
+        const logoSize = Math.min(totalW / 4, colWidth * 0.90);
         const logoX = winnerColX - logoSize / 2;
         const logoY = startY - 40;
         ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
